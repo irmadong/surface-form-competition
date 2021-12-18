@@ -107,6 +107,14 @@ def get_examples(dataset_name, split, stem, n_shot, variant):
         from data_loaders import load_examples_trec
         examples = load_examples_trec(f'{stem}{split}.txt')
         closed_label_space = True
+    elif dataset_name == 'wsc':
+        from data_loaders import load_examples_wsc
+        examples = load_examples_wsc('wsc')
+        closed_label_space = True
+    elif dataset_name == 'wic':
+        from data_loaders import load_examples_wic
+        examples = load_examples_wic('wic')
+        closed_label_space = True
     else:
         raise ValueError(f'Unknown dataset {dataset_name}')
 
