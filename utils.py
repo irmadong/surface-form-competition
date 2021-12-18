@@ -495,21 +495,21 @@ def fwd(model, encoder, examples, batch, cache = None):
 def score(model, model_name, encoder, examples, stem, split, batch):
     hist_path = f'{stem}{model_name}-{split}.hist'
     
-    # if not os.path.exists(hist_path):
-    #     cache = {}
-    #     with open(hist_path, 'w') as f:
-    #         f.write(json.dumps(cache))
-    # else:
-    #     MB = os.path.getsize(hist_path)/1000000
-    #     print('='*50)
-    #     print('Loading existing cache, size {} MB'.format(MB))
-    #     print('='*50)
-    #
-    # with open(hist_path, 'r') as f:
-    #     cache = json.loads(f.read())
+    if not os.path.exists(hist_path):
+        cache = {}
+        with open(hist_path, 'w') as f:
+            f.write(json.dumps(cache))
+    else:
+        MB = os.path.getsize(hist_path)/1000000
+        print('='*50)
+        print('Loading existing cache, size {} MB'.format(MB))
+        print('='*50)
+
+    with open(hist_path, 'r') as f:
+        cache = json.loads(f.read())
         
-    # accs, preds = fwd(model, encoder, examples, batch, cache)
-    accs, preds = fwd(model, encoder, examples, batch)
+    accs, preds = fwd(model, encoder, examples, batch, cache)
+    # accs, preds = fwd(model, encoder, examples, batch)
     
     print('='*50)
     print('saving cache to {}'.format(hist_path))

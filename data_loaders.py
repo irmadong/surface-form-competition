@@ -39,12 +39,12 @@ logger = logging.getLogger(__name__)
 
 
 def load_examples_wsc(path):
-    data = load_dataset('super_glue', path, split = 'train')
+    # data = load_dataset('super_glue', path, split = 'train')
 
-    # data = []
-    # with open(path) as f:
-    #     for line in f:
-    #         data += [json.loads(line)]
+    data = []
+    with open(path) as f:
+        for line in f:
+            data += [json.loads(line)]
 
     examples = []
     for d in data:
@@ -63,12 +63,12 @@ def load_examples_wsc(path):
 
 
 def load_examples_wic(path):
-    data = load_dataset('super_glue', path, split = 'train')
+    # data = load_dataset('super_glue', path, split = 'train')
 
-    # data = []
-    # with open(path) as f:
-    #     for line in f:
-    #         data += [json.loads(line)]
+    data = []
+    with open(path) as f:
+        for line in f:
+            data += [json.loads(line)]
 
     examples = []
     for d in data:
