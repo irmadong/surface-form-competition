@@ -7,7 +7,7 @@ import os
 import logging
 import xml.etree.ElementTree as ET
 from utils import detokenizer
-
+from datasets import load_dataset
 
 '''
 
@@ -37,6 +37,53 @@ logging.basicConfig(format = '%(asctime)s - %(levelname)s - %(name)s -   %(messa
                     level = logging.INFO)
 logger = logging.getLogger(__name__)
 
+
+def load_examples_wsc(path):
+    data = load_dataset('super_glue', path, split = 'train')
+
+    # data = []
+    # with open(path) as f:
+    #     for line in f:
+    #         data += [json.loads(line)]
+
+    examples = []
+    for d in data:
+        premise = f" {d['text']}\n question: Do {d['span1_text']} and {d['span2_text']} have the same reference? \n answer:"
+        options = []
+        for h in ['no', ' yes']:
+            o = {}
+            o['premise'] = premise
+            o['hypothesis'] = h
+            o['uncond_premise'] = f"have the same reference? \n answer:"
+            o['uncond_hypothesis'] = h
+            options.append(o)
+        label = d['label']
+        examples.append({'options' : options, 'label' : label })
+    return examples
+
+
+def load_examples_wic(path):
+    data = load_dataset('super_glue', path, split = 'train')
+
+    # data = []
+    # with open(path) as f:
+    #     for line in f:
+    #         data += [json.loads(line)]
+
+    examples = []
+    for d in data:
+        premise = f" {d['sentence1']} {d['sentence2']}\n question: Does {d['word']} have the same meaning? \n answer:"
+        options = []
+        for h in ['no', ' yes']:
+            o = {}
+            o['premise'] = premise
+            o['hypothesis'] = h
+            o['uncond_premise'] = f"have the same meaning? \n answer:"
+            o['uncond_hypothesis'] = h
+            options.append(o)
+        label = d['label']
+        examples.append({'options' : options, 'label' : label })
+    return examples
 
 def load_examples_copa(path, return_tuple = False):
     root = ET.parse(path).getroot()
