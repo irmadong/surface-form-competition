@@ -48,7 +48,7 @@ def load_examples_wsc(path):
 
     examples = []
     for d in data:
-        premise = f" {d['text']}\n question: Do {d['span1_text']} and {d['span2_text']} have the same reference? \n answer:"
+        premise = f" {d['text']}\n question: Do {d ['target']['span1_text']} and {d['target']['span2_text']} have the same reference? \n answer:"
         options = []
         for h in ['no', ' yes']:
             o = {}
