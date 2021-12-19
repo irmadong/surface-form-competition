@@ -111,13 +111,40 @@ def load_examples_wsc(path, ex_path, n_shot):
         # label = 0 if d['label'] == false else 1
         examples.append({'options' : options, 'label' : label })
     return examples
-def load_examples_wic(path):
+
+
+def load_examples_wic(path, ex_path = None, n_shot = None):
     # data = load_dataset('super_glue', path, split = 'train')
 
     data = []
     with open(path) as f:
         for line in f:
             data += [json.loads(line)]
+
+    if ex_path is None:
+        assert (n_shot is None)
+        fewshot_prefix = None
+    else:
+        assert (n_shot is not None)
+        with open(ex_path) as ff:
+            fewshot_examples = []
+            for line in ff:
+
+            # l, s = line.strip().split('\t')
+                fewshot_prefix = f" {line['sentence1']} {line['sentence2']}\n"
+                label = line['label']
+                if label == 'true':
+                    fewshot_prefix = f"{fewshot_prefix} yes\n"
+                elif label == 'false':
+                    fewshot_prefix = f"{fewshot_prefix} no\n"
+                else:
+                    raise NotImplementedError("this should be impossible")
+                fewshot_examples.append(fewshot_prefix)
+
+        random.shuffle(fewshot_examples)
+        fewshot_prefix = ''
+        for ex in fewshot_examples[:n_shot]:
+            fewshot_prefix = fewshot_prefix + ex
 
     examples = []
     for d in data:
@@ -131,8 +158,30 @@ def load_examples_wic(path):
             o['uncond_hypothesis'] = h
             options.append(o)
         label = d['label']
-        examples.append({'options' : options, 'label' : label })
+        examples.append({'options': options, 'label': label})
     return examples
+# def load_examples_wic(path):
+#     # data = load_dataset('super_glue', path, split = 'train')
+#
+#     data = []
+#     with open(path) as f:
+#         for line in f:
+#             data += [json.loads(line)]
+#
+#     examples = []
+#     for d in data:
+#         premise = f" {d['sentence1']} {d['sentence2']}\n question: Does {d['word']} have the same meaning? \n answer:"
+#         options = []
+#         for h in ['no', ' yes']:
+#             o = {}
+#             o['premise'] = premise
+#             o['hypothesis'] = h
+#             o['uncond_premise'] = f"have the same meaning? \n answer:"
+#             o['uncond_hypothesis'] = h
+#             options.append(o)
+#         label = d['label']
+#         examples.append({'options' : options, 'label' : label })
+#     return examples
 
 
 def load_examples_copa(path, return_tuple = False):
