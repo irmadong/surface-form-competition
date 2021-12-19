@@ -136,11 +136,11 @@ def load_examples_wic(path, ex_path = None, n_shot = None):
         fewshot_examples = []
         for dd in dataset:
             fewshot_prefix = f" {dd['sentence1']} {dd['sentence2']}\n question: Does {dd['word']} have the same meaning? \n answer:"
-            label = dd['label']
-            if label == 'true':
-                fewshot_prefix = f"{fewshot_prefix} yes\n"
-            elif label == 'false':
+            label = int(dd['label'])
+            if label == 0:
                 fewshot_prefix = f"{fewshot_prefix} no\n"
+            elif label == 1:
+                fewshot_prefix = f"{fewshot_prefix} yes\n"
             else:
                 raise NotImplementedError("this should be impossible")
             fewshot_examples.append(fewshot_prefix)
