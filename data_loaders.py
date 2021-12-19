@@ -152,7 +152,7 @@ def load_examples_wic(path, ex_path = None, n_shot = None):
 
     examples = []
     for d in data:
-        premise = f" {d['sentence1']} {d['sentence2']}\n question: Does {d['word']} and {d['word']} in the two sentences have the same meaning? \n answer:"
+        premise = f" {d['sentence1']} {d['sentence2']}\n question: Does {d['word']} in the two sentences have the same meaning? \n answer:"
         options = []
         for h in ['no', ' yes']:
             o = {}
