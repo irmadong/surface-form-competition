@@ -43,8 +43,8 @@ for file in files:
                         else:
                             wsc['0-shot'][colum_list[index]] += element/3
 
-df1 = pd.DataFram.from_dict(wic)
-df2 = pd.DataFram.from_dict(wsc)
+df1 = pd.dataframe.from_dict(wic)
+df2 = pd.dataframe.from_dict(wsc)
 df1.to_csv('wic.csv')
 df2.to_csv('wsc.csv')
     
