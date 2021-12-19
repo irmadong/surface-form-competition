@@ -135,7 +135,7 @@ def load_examples_wic(path, ex_path = None, n_shot = None):
                 dataset += [json.loads(line)]
         fewshot_examples = []
         for dd in dataset:
-            fewshot_prefix = f" {dd['sentence1']} {dd['sentence2']}\n question: Do {dd['word']} and {dd['word']} have the same meaning? \n answer:<BREAK>"
+            fewshot_prefix = f" {dd['sentence1']} {dd['sentence2']}\n question: Does {dd['word']} in the two sentences have the same meaning? \n answer:<BREAK>"
             label = int(dd['label'])
             if label == 0:
                 fewshot_prefix = f"{fewshot_prefix}no\n"
@@ -152,13 +152,13 @@ def load_examples_wic(path, ex_path = None, n_shot = None):
 
     examples = []
     for d in data:
-        premise = f" {d['sentence1']} {d['sentence2']}\n question: Do {d['word']} and {d['word']} have the same meaning? \n answer:"
+        premise = f" {d['sentence1']} {d['sentence2']}\n question: Does {d['word']} and {d['word']} in the two sentences have the same meaning? \n answer:"
         options = []
         for h in ['no', ' yes']:
             o = {}
             o['premise'] = fewshot_prefix + premise
             o['hypothesis'] = h
-            o['uncond_premise'] = f"have the same meaning? \n answer:"
+            o['uncond_premise'] = f"in the two sentences have the same meaning? \n answer:"
             o['uncond_hypothesis'] = h
             options.append(o)
         label = d['label']
