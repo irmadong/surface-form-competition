@@ -58,6 +58,7 @@ def load_examples_wsc(path):
             o['uncond_hypothesis'] = h
             options.append(o)
         label = d['label']
+        # label = 0 if d['label'] == false else 1
         examples.append({'options' : options, 'label' : label })
     return examples
 
@@ -84,6 +85,7 @@ def load_examples_wic(path):
         label = d['label']
         examples.append({'options' : options, 'label' : label })
     return examples
+
 
 def load_examples_copa(path, return_tuple = False):
     root = ET.parse(path).getroot()
@@ -488,6 +490,8 @@ def load_examples_sst2(path, ex_path=None, n_shot=None):
             fewshot_examples = []
             for i, line in enumerate(lines):
                 l, s = line.strip().split('\t')
+                # print("s is " + s)
+                # print("l is " + l)
                 fewshot_prefix = f" {s}:"
                 label = int(l[-1])-3
                 if label == 0:
@@ -504,6 +508,8 @@ def load_examples_sst2(path, ex_path=None, n_shot=None):
         fewshot_prefix = ''
         for ex in fewshot_examples[:n_shot]:
             fewshot_prefix = fewshot_prefix + ex
+        # print("fewshot prefix is ")
+        # print(fewshot_prefix)
 
     examples = []
     for d in data:
@@ -521,7 +527,15 @@ def load_examples_sst2(path, ex_path=None, n_shot=None):
         label = d['correct_hypothesis']
         examples.append({'options' : options, 'label' : label })
     return examples
-
+# stem = f'data/sst-2/'
+# n_shot = 3
+# if n_shot > 0:
+#     examples = load_examples_sst2(f'{stem}dev.tsv', f'{stem}/train.tsv', n_shot)
+# else:
+#     examples = load_examples_sst2(f'{stem}dev.tsv')
+# # examples = load_examples_copa(f'{stem}copa-dev.xml')
+# print()
+# print(examples[0])
 def get_sst2_variant_template(variant):
     if variant == 0:
         premise_template = ' Review: {sentence}\n Answer:' 
