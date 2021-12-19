@@ -1,4 +1,5 @@
 import pandas as pd
+import os
 
 
 files = os.listdir('results')
@@ -11,7 +12,7 @@ for colum in colum_list:
         wic[key][colum] = 0
         wsc[key][colum] = 0
 for file in files:
-    with open('results'+file) as f:
+    with open('results/'+file) as f:
         content = f.readlines()
         for line in content:
             line = line.strip()
