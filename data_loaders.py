@@ -82,7 +82,7 @@ def load_examples_wsc(path, ex_path=None, n_shot=None):
                 dataset += [json.loads(line)]
         fewshot_examples = []
         for dd in dataset:
-            fewshot_prefix = f" {dd['text']}:"
+            fewshot_prefix = f" {dd['text']} \n question: Do {dd ['target']['span1_text']} and {dd['target']['span2_text']} have the same reference? \n answer:"
             label = int(dd['label'])
             if label == 0:
                 fewshot_prefix = f"{fewshot_prefix} no\n"
@@ -135,7 +135,7 @@ def load_examples_wic(path, ex_path = None, n_shot = None):
                 dataset += [json.loads(line)]
         fewshot_examples = []
         for dd in dataset:
-            fewshot_prefix = f" {dd['sentence1']} {dd['sentence2']}\n"
+            fewshot_prefix = f" {dd['sentence1']} {dd['sentence2']}\n question: Does {dd['word']} have the same meaning? \n answer:"
             label = dd['label']
             if label == 'true':
                 fewshot_prefix = f"{fewshot_prefix} yes\n"
