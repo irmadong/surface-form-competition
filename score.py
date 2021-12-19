@@ -173,6 +173,6 @@ if __name__ == '__main__':
     print(f"{accs['domain_cond']}, {accs['lm']}, {accs['tok_mean']}, {accs['dcpmi']}")
 
     file_name = args.dataset+'-'+str(args.n_shot)+'-shot-'+str(args.seed)+'.txt'
-    f = open('results/'+file_name)
+    f = open('results/'+file_name,'w')
     f.write(f"{accs['domain_cond']} & {accs['lm']} & {accs['tok_mean']} & {accs['pmi']} & {accs['dcpmi']}")
     f.close()
