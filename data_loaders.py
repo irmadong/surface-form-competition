@@ -82,7 +82,7 @@ def load_examples_wsc(path, ex_path=None, n_shot=None):
                 dataset += [json.loads(line)]
         fewshot_examples = []
         for dd in dataset:
-            fewshot_prefix = f" {dd['text']} \n question: Do {dd ['target']['span1_text']} and {dd['target']['span2_text']} have the same reference? \n answer:"
+            fewshot_prefix = f" {dd['text']} \n question: Do {dd ['target']['span1_text']} and {dd['target']['span2_text']} have the same reference? \n answer: <BREAK>"
             label = int(dd['label'])
             if label == 0:
                 fewshot_prefix = f"{fewshot_prefix} no\n"
@@ -98,7 +98,7 @@ def load_examples_wsc(path, ex_path=None, n_shot=None):
 
     examples = []
     for d in data:
-        premise = f" {d['text']}\n question: Do {d ['target']['span1_text']} and {d['target']['span2_text']} have the same reference? \n answer:"
+        premise = f" {d['text']}\n question: Do {d ['target']['span1_text']} and {d['target']['span2_text']} have the same reference? \n answer: <BREAK>"
         #to do check do we need the post check then?
         if fewshot_prefix is not None:
             premise = fewshot_prefix + premise
@@ -107,7 +107,7 @@ def load_examples_wsc(path, ex_path=None, n_shot=None):
             o = {}
             o['premise'] = premise
             o['hypothesis'] = h
-            o['uncond_premise'] = f"have the same reference? \n answer:"
+            o['uncond_premise'] = f"have the same reference? \n answer:<BREAK>"
             o['uncond_hypothesis'] = h
             options.append(o)
         label = d['label']
@@ -135,7 +135,7 @@ def load_examples_wic(path, ex_path = None, n_shot = None):
                 dataset += [json.loads(line)]
         fewshot_examples = []
         for dd in dataset:
-            fewshot_prefix = f" {dd['sentence1']} {dd['sentence2']}\n question: Does {dd['word']} have the same meaning? \n answer:"
+            fewshot_prefix = f" {dd['sentence1']} {dd['sentence2']}\n question: Does {dd['word']} have the same meaning? \n answer:<BREAK>"
             label = int(dd['label'])
             if label == 0:
                 fewshot_prefix = f"{fewshot_prefix} no\n"
@@ -152,13 +152,13 @@ def load_examples_wic(path, ex_path = None, n_shot = None):
 
     examples = []
     for d in data:
-        premise = f" {d['sentence1']} {d['sentence2']}\n question: Does {d['word']} have the same meaning? \n answer:"
+        premise = f" {d['sentence1']} {d['sentence2']}\n question: Does {d['word']} have the same meaning? \n answer:<BREAK>"
         options = []
         for h in ['no', ' yes']:
             o = {}
-            o['premise'] = premise
+            o['premise'] = fewshot_prefix + premise
             o['hypothesis'] = h
-            o['uncond_premise'] = f"have the same meaning? \n answer:"
+            o['uncond_premise'] = f"have the same meaning? \n answer:<BREAK>"
             o['uncond_hypothesis'] = h
             options.append(o)
         label = d['label']
