@@ -38,17 +38,67 @@ logging.basicConfig(format = '%(asctime)s - %(levelname)s - %(name)s -   %(messa
 logger = logging.getLogger(__name__)
 
 
-def load_examples_wsc(path):
+# def load_examples_wsc(path):
+#     # data = load_dataset('super_glue', path, split = 'train')
+#
+#     data = []
+#     with open(path) as f:
+#         for line in f:
+#             data += [json.loads(line)]
+#
+#     examples = []
+#     for d in data:
+#         premise = f" {d['text']}\n question: Do {d ['target']['span1_text']} and {d['target']['span2_text']} have the same reference? \n answer:"
+#         options = []
+#         for h in ['no', ' yes']:
+#             o = {}
+#             o['premise'] = premise
+#             o['hypothesis'] = h
+#             o['uncond_premise'] = f"have the same reference? \n answer:"
+#             o['uncond_hypothesis'] = h
+#             options.append(o)
+#         label = d['label']
+#         # label = 0 if d['label'] == false else 1
+#         examples.append({'options' : options, 'label' : label })
+#     return examples
+
+def load_examples_wsc(path, ex_path, n_shot):
     # data = load_dataset('super_glue', path, split = 'train')
 
     data = []
     with open(path) as f:
         for line in f:
             data += [json.loads(line)]
+    #prefix!
+
+    if ex_path is None:
+        assert(n_shot is None)
+        fewshot_prefix = None
+    else:
+        assert (n_shot is not None)
+        with open(ex_path) as lines:
+            fewshot_examples = []
+            for line in lines:
+                fewshot_prefix = f" {line['text']}:"
+                label = int(line['label'])
+                if label == 0:
+                    fewshot_prefix = f"{fewshot_prefix} no\n"
+                elif label == 1:
+                    fewshot_prefix = f"{fewshot_prefix} yes\n"
+                else:
+                    raise NotImplementedError("this should be impossible")
+                fewshot_examples.append(fewshot_prefix)
+            random.shuffle(fewshot_examples)
+            fewshot_prefix = ''
+            for ex in fewshot_examples[:n_shot]:
+                fewshot_prefix = fewshot_prefix + ex
 
     examples = []
     for d in data:
         premise = f" {d['text']}\n question: Do {d ['target']['span1_text']} and {d['target']['span2_text']} have the same reference? \n answer:"
+        #to do check do we need the post check then?
+        if fewshot_prefix is not None:
+            premise = fewshot_prefix + premise
         options = []
         for h in ['no', ' yes']:
             o = {}
@@ -61,8 +111,6 @@ def load_examples_wsc(path):
         # label = 0 if d['label'] == false else 1
         examples.append({'options' : options, 'label' : label })
     return examples
-
-
 def load_examples_wic(path):
     # data = load_dataset('super_glue', path, split = 'train')
 
@@ -467,6 +515,7 @@ def load_examples_sst5(path):
         label = d['correct_hypothesis']
         examples.append({'options' : options, 'label' : label })
     return examples
+
 
 def load_examples_sst2(path, ex_path=None, n_shot=None):
     data = []
