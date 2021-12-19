@@ -81,9 +81,9 @@ def load_examples_wsc(path, ex_path=None, n_shot=None):
             for line in lines:
                 dataset += [json.loads(line)]
         fewshot_examples = []
-        for data in dataset:
-            fewshot_prefix = f" {data['text']}:"
-            label = int(data['label'])
+        for dd in dataset:
+            fewshot_prefix = f" {dd['text']}:"
+            label = int(dd['label'])
             if label == 0:
                 fewshot_prefix = f"{fewshot_prefix} no\n"
             elif label == 1:
