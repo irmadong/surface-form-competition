@@ -62,7 +62,7 @@ logger = logging.getLogger(__name__)
 #         examples.append({'options' : options, 'label' : label })
 #     return examples
 
-def load_examples_wsc(path, ex_path, n_shot):
+def load_examples_wsc(path, ex_path=None, n_shot=None):
     # data = load_dataset('super_glue', path, split = 'train')
 
     data = []

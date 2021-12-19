@@ -109,12 +109,20 @@ def get_examples(dataset_name, split, stem, n_shot, variant):
         closed_label_space = True
     elif dataset_name == 'wsc':
         from data_loaders import load_examples_wsc
-        examples = load_examples_wsc(f'{stem}dev.jsonl')
+        if n_shot > 0:
+            examples = load_examples_wsc(f'{stem}dev.jsonl', f'{stem}/WSC/train.jsonl', n_shot)
+        else:
+            examples = load_examples_wsc(f'{stem}dev.jsonl')
         # load_examples_rte(f'{stem}dev.jsonl')
         closed_label_space = True
     elif dataset_name == 'wic':
         from data_loaders import load_examples_wic
-        examples = load_examples_wic(f'{stem}dev.jsonl')
+        if n_shot > 0:
+            examples = load_examples_wic(f'{stem}dev.jsonl', f'{stem}/WiC/train.jsonl', n_shot)
+        else:
+            examples = load_examples_wic(f'{stem}dev.jsonl')
+
+        # examples = load_examples_wic(f'{stem}dev.jsonl')
         closed_label_space = True
     else:
         raise ValueError(f'Unknown dataset {dataset_name}')
