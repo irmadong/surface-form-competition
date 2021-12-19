@@ -19,7 +19,7 @@ for file in files:
             if len(line)>5:
                 for index,element in enumerate(line.split('&')):
                     element = element.strip()
-                    element = double(element)
+                    element = float(element)
                     if 'wic' in file:
                         if '1-shot' in file:
                             wic['1-shot'][colum_list[index]] += element/3
