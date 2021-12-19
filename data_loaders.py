@@ -76,22 +76,25 @@ def load_examples_wsc(path, ex_path=None, n_shot=None):
         fewshot_prefix = None
     else:
         assert (n_shot is not None)
+        dataset = []
         with open(ex_path) as lines:
-            fewshot_examples = []
             for line in lines:
-                fewshot_prefix = f" {line['text']}:"
-                label = int(line['label'])
-                if label == 0:
-                    fewshot_prefix = f"{fewshot_prefix} no\n"
-                elif label == 1:
-                    fewshot_prefix = f"{fewshot_prefix} yes\n"
-                else:
-                    raise NotImplementedError("this should be impossible")
-                fewshot_examples.append(fewshot_prefix)
-            random.shuffle(fewshot_examples)
-            fewshot_prefix = ''
-            for ex in fewshot_examples[:n_shot]:
-                fewshot_prefix = fewshot_prefix + ex
+                dataset += [json.loads(line)]
+        fewshot_examples = []
+        for data in dataset:
+            fewshot_prefix = f" {data['text']}:"
+            label = int(data['label'])
+            if label == 0:
+                fewshot_prefix = f"{fewshot_prefix} no\n"
+            elif label == 1:
+                fewshot_prefix = f"{fewshot_prefix} yes\n"
+            else:
+                raise NotImplementedError("this should be impossible")
+            fewshot_examples.append(fewshot_prefix)
+        random.shuffle(fewshot_examples)
+        fewshot_prefix = ''
+        for ex in fewshot_examples[:n_shot]:
+            fewshot_prefix = fewshot_prefix + ex
 
     examples = []
     for d in data:
