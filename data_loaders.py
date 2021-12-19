@@ -129,20 +129,21 @@ def load_examples_wic(path, ex_path = None, n_shot = None):
         fewshot_prefix = None
     else:
         assert (n_shot is not None)
+        dataset = []
         with open(ex_path) as ff:
-            fewshot_examples = []
             for line in ff:
-
-            # l, s = line.strip().split('\t')
-                fewshot_prefix = f" {line['sentence1']} {line['sentence2']}\n"
-                label = line['label']
-                if label == 'true':
-                    fewshot_prefix = f"{fewshot_prefix} yes\n"
-                elif label == 'false':
-                    fewshot_prefix = f"{fewshot_prefix} no\n"
-                else:
-                    raise NotImplementedError("this should be impossible")
-                fewshot_examples.append(fewshot_prefix)
+                dataset += [json.loads(line)]
+        fewshot_examples = []
+        for dd in dataset:
+            fewshot_prefix = f" {dd['sentence1']} {dd['sentence2']}\n"
+            label = dd['label']
+            if label == 'true':
+                fewshot_prefix = f"{fewshot_prefix} yes\n"
+            elif label == 'false':
+                fewshot_prefix = f"{fewshot_prefix} no\n"
+            else:
+                raise NotImplementedError("this should be impossible")
+            fewshot_examples.append(fewshot_prefix)
 
         random.shuffle(fewshot_examples)
         fewshot_prefix = ''
