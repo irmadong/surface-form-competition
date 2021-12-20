@@ -101,6 +101,10 @@ def get_examples(dataset_name, split, stem, n_shot, variant):
     elif dataset_name == 'agn':
         from data_loaders import load_examples_agn
         examples = load_examples_agn(f'{stem}{split}.csv')
+        if n_shot > 0:
+            examples = load_examples_agn(f'{stem}{split}.csv', f'{stem}train.csv', n_shot)
+        else:
+            examples = load_examples_agn(f'{stem}dev.jsonl')
         closed_label_space = True
     elif dataset_name == 'trec':
         split = 'train' if split == 'dev' else split

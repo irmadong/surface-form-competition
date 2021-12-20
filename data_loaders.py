@@ -73,7 +73,7 @@ def load_examples_wsc(path, ex_path=None, n_shot=None):
 
     if ex_path is None:
         assert(n_shot is None)
-        fewshot_prefix = None
+        fewshot_prefix = ''
     else:
         assert (n_shot is not None)
         dataset = []
@@ -126,7 +126,7 @@ def load_examples_wic(path, ex_path = None, n_shot = None):
 
     if ex_path is None:
         assert (n_shot is None)
-        fewshot_prefix = None
+        fewshot_prefix = ''
     else:
         assert (n_shot is not None)
         dataset = []
@@ -735,7 +735,39 @@ def load_examples_sst2_variants(path, variant):
     return examples
 
 
-def load_examples_agn(path):
+def load_examples_agn(path, ex_path=None, n_shot=None):
+
+    #prefix!
+
+    if ex_path is None:
+        assert(n_shot is None)
+        fewshot_prefix = ''
+    else:
+        assert (n_shot is not None)
+        fewshot_examples = []
+        with open(ex_path) as fp:
+            reader = csv.DictReader(fp)
+            for row in reader:
+                label = int(row['Class Index']) - 1
+                title = row['Title']
+                summary = row['Description']
+                premise = f" title: {title}\n summary: {summary}\n topic:"
+                if label == 0:
+                    fewshot_prefix = f"{premise} world\n"
+                elif label == 1:
+                    fewshot_prefix = f"{premise} sports\n"
+                elif label == 2:
+                    fewshot_prefix = f"{premise} business\n"
+                elif label == 3:
+                    fewshot_prefix = f"{premise} science\n"
+                else:
+                    raise NotImplementedError("this should be impossible")
+                fewshot_examples.append(fewshot_prefix)
+        random.shuffle(fewshot_examples)
+        fewshot_prefix = ''
+        for ex in fewshot_examples[:n_shot]:
+            fewshot_prefix = fewshot_prefix + ex
+
     topics = [ 'World', 'Sports', 'Business', 'Science' ] 
     examples = []
     with open(path) as fp:
@@ -748,7 +780,7 @@ def load_examples_agn(path):
             options = []
             for h in topics:
                 o = {}
-                o['premise'] = premise
+                o['premise'] = fewshot_prefix+premise
                 o['hypothesis'] = ' ' + h.lower()
                 o['uncond_premise'] = '\n topic:'
                 o['uncond_hypothesis'] = ' ' + h.lower()
