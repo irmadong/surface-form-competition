@@ -751,7 +751,7 @@ def load_examples_agn(path, ex_path=None, n_shot=None):
                 label = int(row['Class Index']) - 1
                 title = row['Title']
                 summary = row['Description']
-                premise = f" title: {title}\n summary: {summary}\n topic:"
+                premise = f" title: {title}\n summary: {summary}\n topic:<BREAK>"
                 if label == 0:
                     fewshot_prefix = f"{premise} world\n"
                 elif label == 1:
